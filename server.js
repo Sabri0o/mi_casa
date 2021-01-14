@@ -40,7 +40,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to 'mi casa es tu casa' application. \n this is a GET route for test" });
 });
 ////We also need to include routes in server.js (right before app.listen()):
-require("./app/routes/mctc.routes")(app);
+//require("./app/routes/users.routes")(app);
+require('./app/routes/auth.routes')(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
