@@ -11,7 +11,9 @@ cloudinary.config({
 });
 
 module.exports = function(app) {
-  
+
+  /////////////////////////////////////////////////////////////////////// become a host feature
+
   // persist image
 app.post("/become_a_host", (request, response) => {
   // collected image from a user
@@ -48,4 +50,69 @@ app.post("/become_a_host", (request, response) => {
   });
 });
 
+
+/////////////////////////////////////////////////////////////////////// search feature
+
+// data = {
+//   "currentpage": request.body.currentPage,
+//   "gender": request.body.gender,
+//   "age": request.body.age,
+//   "nationality": request.body.nationality,
+//   "space": request.body.space
+// }
+
+// {
+//   "count": 8,
+//   "rows": [
+//       {
+//           "id": 4,
+//           "title": "bezkoder Tut#4 Rest Apis",
+//           "description": "Tut#4 Description",
+//           "published": false,
+//           "createdAt": "2020-06-05T11:55:07.000Z",
+//           "updatedAt": "2020-06-05T11:55:07.000Z"
+//       },
+//       {
+//           "id": 5,
+//           "title": "bezkoder Tut#5 MySQL",
+//           "description": "Tut#5 Description",
+//           "published": false,
+//           "createdAt": "2020-06-05T11:55:11.000Z",
+//           "updatedAt": "2020-06-05T11:55:11.000Z"
+//       }
+//   ]
+// }
+
+
+app.post('/search', function(request, response) {
+  let conditions = Object.entries(request.body).filter(x=>(x[1]!=='' && x[0]!=='currentpage')) // keeping just the changed input 
+  var pageNo = request.body.currentpage
+
+   // updating the filterBy based on the conditions
+
+  let filterBy = {status : 'free'} 
+
+  for(var ele of conditions) {
+    filterBy[ele[0]] = ele[1]
+  }
+
+  let query = {}
+
+  var size = 5  // pagination size
+  query.offset =  size * pageNo // pagination skip indicator
+  query.limit = size // pagination size
+  query.where = filterBy
+  query.attributes = ['username','gender','age','nationality','profile_picture','room_space']
+  console.log(query)
+
+//////////////// return the number of documents satisfy the query  
+
+db.users.findAndCountAll(query).then(data => {
+      console.log('searching results')
+      response.send(data)
+    }).catch(err => {
+      console.log('searching failed')
+      response.send(err)
+    });
+  })
 };
