@@ -2,7 +2,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+
 const app = express();
+
+// const cloudinary = require("cloudinary").v2;
+
+// // cloudinary configuration
+
+// cloudinary.config({
+//   cloud_name: "testing-mctc-project",
+//   api_key: "591627645258192",
+//   api_secret: "38izIqLk7vqZhs9MLVGj3aRqBx0"
+// });
 
 var corsOptions = {
   origin: "http://localhost:8081"
@@ -40,7 +51,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to 'mi casa es tu casa' application. \n this is a GET route for test" });
 });
 ////We also need to include routes in server.js (right before app.listen()):
-//require("./app/routes/users.routes")(app);
+require("./app/routes/users.routes")(app);
 require('./app/routes/auth.routes')(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
