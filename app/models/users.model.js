@@ -16,11 +16,3 @@ module.exports = (sequelize, Sequelize) => {
 
     return User;
   };
-
-
-
-  
- /*type: Sequelize.INTEGER,
-    allowNull: true,
-    defaultValue: null,
-    validate: { min: -90, max: 90 }*/

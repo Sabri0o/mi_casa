@@ -21,7 +21,7 @@ app.post("/become_a_host", (request, response) => {
     image: request.body.image,
     room_space : request.body.space
   }
-  console.log('connected user: ',connectedId)
+  //console.log('connected user: ',connectedId)
   console.log('post request sent to cloudinary')
   // upload image here
   cloudinary.uploader.upload(data.image)
@@ -52,37 +52,6 @@ app.post("/become_a_host", (request, response) => {
 
 
 /////////////////////////////////////////////////////////////////////// search feature
-
-// data = {
-//   "currentpage": request.body.currentPage,
-//   "gender": request.body.gender,
-//   "age": request.body.age,
-//   "nationality": request.body.nationality,
-//   "space": request.body.space
-// }
-
-// {
-//   "count": 8,
-//   "rows": [
-//       {
-//           "id": 4,
-//           "title": "bezkoder Tut#4 Rest Apis",
-//           "description": "Tut#4 Description",
-//           "published": false,
-//           "createdAt": "2020-06-05T11:55:07.000Z",
-//           "updatedAt": "2020-06-05T11:55:07.000Z"
-//       },
-//       {
-//           "id": 5,
-//           "title": "bezkoder Tut#5 MySQL",
-//           "description": "Tut#5 Description",
-//           "published": false,
-//           "createdAt": "2020-06-05T11:55:11.000Z",
-//           "updatedAt": "2020-06-05T11:55:11.000Z"
-//       }
-//   ]
-// }
-
 
 app.post('/search', function(request, response) {
   let conditions = Object.entries(request.body).filter(x=>(x[1]!=='' && x[0]!=='currentpage')) // keeping just the changed input 
@@ -115,4 +84,52 @@ db.users.findAndCountAll(query).then(data => {
       response.send(err)
     });
   })
+
+/////////////////////////////////////////////////////////////////////// add a contact to the favourite contacts list 
+
+app.post('/add_favourite', function(request, response) {
+
+  const favouriteUser = {
+    id : request.body.favouriteUserId
+  }
+  console.log('connectedId: ',connectedId)
+  console.log('favourite host: ',favouriteUser.id)
+
+  db.favourite_hosts.create({
+    user_id: connectedId,
+    favourite_user_id : favouriteUser.id
+  })
+    .then(()=>{
+      response.send({ message: "Contact added successfully to favourite contacts list" })
+    })
+    .catch(err => {
+      response.status(500).send({ message: err.message });
+    });
+  })
+
+
+  /////////////////////////////////////////////////////////////////////// remove a contact to the favourite contacts list 
+
+app.post('/remove_favourite', function(request, response) {
+
+  const favouriteUser = {
+    id : request.body.favouriteUserId
+  }
+  console.log('connectedId: ',connectedId)
+  console.log('favourite host: ',favouriteUser.id)
+  db.favourite_hosts.destroy({
+    where: {
+      user_id: connectedId,
+      favourite_user_id : favouriteUser.id
+      }
+})
+    .then(()=>{
+      response.send({ message: "Contact removed successfully to favourite contacts list" })
+    })
+    .catch(err => {
+      response.status(500).send({ message: err.message });
+    });
+  })
+
+
 };
