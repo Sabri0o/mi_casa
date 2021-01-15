@@ -102,7 +102,7 @@ app.post('/search', function(request, response) {
   query.offset =  size * pageNo // pagination skip indicator
   query.limit = size // pagination size
   query.where = filterBy
-  query.attributes = ['username','gender','age','nationality','profile_picture','room_space']
+  query.attributes = ['username','gender','age','nationality','profile_picture','room_space','contact']
   console.log(query)
 
 //////////////// return the number of documents satisfy the query  
