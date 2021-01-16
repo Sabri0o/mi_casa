@@ -56,7 +56,7 @@ app.post("/become_a_host", (request, response) => {
 app.post('/search', function(request, response) {
   let conditions = Object.entries(request.body).filter(x=>(x[1]!=='' && x[0]!=='currentpage')) // keeping just the changed input 
   var pageNo = request.body.currentpage
-
+ 
    // updating the filterBy based on the conditions
 
   let filterBy = {status : 'free'} 
@@ -133,15 +133,28 @@ app.post('/remove_favourite', function(request, response) {
 
 /////////////////////////////////////////////////////////////////////// display favourite contacts list 
 
-// app.post('/display_favourite', function(request, response) {
-//   console.log('connectedId: ',connectedId)
-//   let queryStr = 'SELECT * FROM users WHERE age = 25'
-//   db.sequelize.query(queryStr)
-//   .then((res)=>{
-//         response.send({ queryResult:res[0],message: "query done" })
-//       })
-//       .catch(err => {
-//         response.status(500).send({ message: err.message });
-//       })
-//   })
+app.post('/display_favourite', function(request, response) {
+  console.log('connectedId: ',connectedId)
+  let pageNo = request.body.currentpage
+  let size = 5 // pagination size
+  let pagesToSkip =  size * pageNo // pagination skip indicator
+  
+  let queryStr =    `Select sub.user_id , sub.username, sub.favourite_user_id, u.username, u.gender , u.age, u.contact,  u.room_space,  u.room_picture , u.nationality
+                        from users as u
+                        join  (select u.username, f.user_id, f.favourite_user_id
+			                        from users as u
+			                        join favourite_hosts as f
+			                        on u.id = f.user_id
+	  	                        where u.id = ${3})  as sub
+                        on u.id = sub.favourite_user_id
+                        limit ${size}  offset ${pagesToSkip}`
+  db.sequelize.query(queryStr)
+  .then((res)=>{
+    console.log('query done')
+        response.send({ queryResult:res[0],message: "query done" })
+      })
+      .catch(err => {
+        response.status(500).send({ message: err.message });
+      })
+  })
 };
