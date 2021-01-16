@@ -131,5 +131,17 @@ app.post('/remove_favourite', function(request, response) {
     });
   })
 
+/////////////////////////////////////////////////////////////////////// display favourite contacts list 
 
+// app.post('/display_favourite', function(request, response) {
+//   console.log('connectedId: ',connectedId)
+//   let queryStr = 'SELECT * FROM users WHERE age = 25'
+//   db.sequelize.query(queryStr)
+//   .then((res)=>{
+//         response.send({ queryResult:res[0],message: "query done" })
+//       })
+//       .catch(err => {
+//         response.status(500).send({ message: err.message });
+//       })
+//   })
 };
